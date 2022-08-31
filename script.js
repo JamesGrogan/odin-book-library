@@ -69,17 +69,19 @@ function addBookToTable(book) {
 };
 
 function removeBookFromLibrary(e) {
-  index = e.composedPath()[2].dataset.indexNumber; //path[2] is the <tr> element
+  console.log(e);
+  index = e.target.parentElement.parentElement.dataset.indexNumber; //gets the <tr> element
   delete myLibrary[index]; // is there a better solution than delete...?
 };
 
 function removeBookFromTable(e) {
-  rowIndex = e.composedPath()[2].rowIndex;
-  e.composedPath()[4].deleteRow(rowIndex); //path[4] is the <table> element
+  let rowIndex = e.target.parentElement.parentElement.rowIndex;
+  let bookTable = e.target.parentElement.parentElement.parentElement.parentElement;
+  bookTable.deleteRow(rowIndex); 
 };
 
 function toggleReadStatus(e) {
-  index = e.composedPath()[2].dataset.indexNumber;
+  index = e.target.parentElement.parentElement.dataset.indexNumber;
   myLibrary[index].read = !myLibrary[index].read
   myLibrary[index].read ? e.srcElement.innerHTML = 'Read' : e.srcElement.innerHTML = 'Not Read';
 }
