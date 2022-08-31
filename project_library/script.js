@@ -45,6 +45,7 @@ function addBookToTable(book) {
   let readCell = newRow.insertCell(3);
   let readButton = document.createElement('button');
   readButton.innerHTML = book.read;
+  book.read ? readButton.innerHTML = 'Read' : readButton.innerHTML = 'Not read';
   readCell.appendChild(readButton);
   readButton.addEventListener('click', (e) => {
     toggleReadStatus(e);
@@ -81,7 +82,7 @@ function removeBookFromTable(e) {
 function toggleReadStatus(e) {
   index = e.composedPath()[2].dataset.indexNumber;
   myLibrary[index].read = !myLibrary[index].read
-  e.srcElement.innerHTML = myLibrary[index].read;
+  myLibrary[index].read ? e.srcElement.innerHTML = 'Read' : e.srcElement.innerHTML = 'Not Read';
 }
 
 let form = document.getElementById('newBookForm');
