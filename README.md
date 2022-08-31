@@ -1,1 +1,1 @@
-# odin-javascript-exercises
+# odin-book-library
