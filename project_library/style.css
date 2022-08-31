@@ -43,9 +43,14 @@ padding: 10px;
     z-index: 9;
 }
 
-  .form-container {
+.form-container {
     display: grid;
     max-width: 500px;
     padding: 10px;
     background-color: white;
+}
+
+.trash-icon {
+    height: 18px;
+    width: 18px;
 }

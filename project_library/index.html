@@ -15,14 +15,14 @@
             <th>Author</th>
             <th>Pages</th>
             <th>Read</th>
+            <th>Remove</th>
         </tr>
     </table>
-    <button id="add-predefined-books" onclick="displayBooks()">Add predefined books</button>
     <button id="add-new-book" onclick="openForm()">Add new book</button>
 
-    <div class="form-popup" id="newBookForm">
+    <div class="form-popup" id="div-newBookForm">
         <!-- TODO insert post action -->
-        <form action="#" class="form-container">
+        <form action="#" class="form-container" id="newBookForm">
             <h1>Add new book to library</h1>
 
             <label for="title"><b>Title</b></label>
