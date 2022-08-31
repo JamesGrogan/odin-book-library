@@ -44,7 +44,6 @@ function addBookToTable(book) {
 
   let readCell = newRow.insertCell(3);
   let readButton = document.createElement('button');
-  readButton.innerHTML = book.read;
   book.read ? readButton.innerHTML = 'Read' : readButton.innerHTML = 'Not read';
   readCell.appendChild(readButton);
   readButton.addEventListener('click', (e) => {
@@ -92,7 +91,8 @@ form.addEventListener("submit", (e) => {
   let title = document.getElementById('title').value;
   let author = document.getElementById('author').value;
   let pages = document.getElementById('pages').value;
-  let isRead = document.getElementById('isRead').value;
+  let isRead;
+  document.getElementById('isRead').value ==='true' ? isRead = true : isRead = false;
   let newBook = new Book(title, author, pages, isRead);
   addBookToLibrary(newBook);
   addBookToTable(newBook);
