@@ -7,6 +7,21 @@ function Book(title, author, pages, read) {
   this.read = read
 };
 
+hobbit = new Book("The Hobbit", "Tolkein", 305, true);
+harryPotter = new Book(
+  "Harry Potter and the Order of the Phoenix",
+  "Rowling",
+  766,
+  true);
+godfather = new Book("The Godfather", "Mario Puzo", 608, false);
+
+addBookToLibrary(hobbit);
+addBookToTable(hobbit);
+addBookToLibrary(harryPotter);
+addBookToTable(harryPotter);
+addBookToLibrary(godfather);
+addBookToTable(godfather);
+
 function addBookToLibrary(book) {
   myLibrary.push(book);
 };
@@ -28,8 +43,12 @@ function addBookToTable(book) {
   pagesCell.appendChild(pagesText);
 
   let readCell = newRow.insertCell(3);
-  let readText = document.createTextNode(book.read);
-  readCell.appendChild(readText);
+  let readButton = document.createElement('button');
+  readButton.innerHTML = book.read;
+  readCell.appendChild(readButton);
+  readButton.addEventListener('click', (e) => {
+    toggleReadStatus(e);
+  })
 
   let deleteCell = newRow.insertCell(4);
   let deleteIcon = document.createElement('img');
@@ -43,22 +62,27 @@ function addBookToTable(book) {
   })
   newRow.dataset.indexNumber = bookIndexNumber; //dataset is a HTML attribute on <tr>
 
-  let deleteIconButton = document.getElementsByClassName(`trash-icon ${bookTable.rows.length - 1}`)[0];
-  deleteIconButton.addEventListener('click', (e) => {
+  deleteIcon.addEventListener('click', (e) => {
     removeBookFromLibrary(e);
     removeBookFromTable(e);
   })
 };
 
 function removeBookFromLibrary(e) {
-  index = e.path[2].dataset.indexNumber; //path[2] is the <tr> element
+  index = e.composedPath()[2].dataset.indexNumber; //path[2] is the <tr> element
   delete myLibrary[index]; // is there a better solution than delete...?
 };
 
 function removeBookFromTable(e) {
-  rowIndex = e.path[2].rowIndex;
-  e.path[4].deleteRow(rowIndex); //path[4] is the <table> element
+  rowIndex = e.composedPath()[2].rowIndex;
+  e.composedPath()[4].deleteRow(rowIndex); //path[4] is the <table> element
 };
+
+function toggleReadStatus(e) {
+  index = e.composedPath()[2].dataset.indexNumber;
+  myLibrary[index].read = !myLibrary[index].read
+  e.srcElement.innerHTML = myLibrary[index].read;
+}
 
 let form = document.getElementById('newBookForm');
 form.addEventListener("submit", (e) => {
