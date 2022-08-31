@@ -11,13 +11,13 @@ function addBookToLibrary(book) {
   myLibrary.push(book);
 }
 
-hobbit = new Book("The Hobbit", "Tolkein", 305, true);
-harryPotter = new Book(
+let hobbit = new Book("The Hobbit", "Tolkein", 305, true);
+let harryPotter = new Book(
   "Harry Potter and the Order of the Phoenix",
   "Rowling",
   766,
   true);
-godfather = new Book("The Godfather", "Mario Puzo", 608, false);
+let godfather = new Book("The Godfather", "Mario Puzo", 608, false);
 
 addBookToLibrary(hobbit);
 addBookToLibrary(harryPotter);
@@ -46,5 +46,27 @@ function displayBooks() {
   });
 };
 
-let predefinedButton = document.querySelector('#add-predefined-books');
-predefinedButton.addEventListener("click", displayBooks);
+let form = document.querySelector('#newBookForm');
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  // TODO condense this into a loop
+  let title = document.getElementById('title').value;
+  let author = document.getElementById('author').value;
+  let pages = document.getElementById('pages').value;
+  let isRead = document.getElementById('isRead').value;
+  let newBook = new Book(title, author, pages, isRead);
+  addBookToLibrary(newBook);
+  displayBooks();
+})
+
+function openForm() {
+  document.getElementById('newBookForm').style.display= 'block';
+}
+
+function closeForm() {
+  document.getElementById('newBookForm').style.display = 'none';
+}
+
+function addNewBook() {
+  //TODO add form validation
+}

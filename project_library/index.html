@@ -17,6 +17,32 @@
             <th>Read</th>
         </tr>
     </table>
-    <button id="add-predefined-books">Add predefined books</button>
+    <button id="add-predefined-books" onclick="displayBooks()">Add predefined books</button>
+    <button id="add-new-book" onclick="openForm()">Add new book</button>
+
+    <div class="form-popup" id="newBookForm">
+        <!-- TODO insert post action -->
+        <form action="#" class="form-container">
+            <h1>Add new book to library</h1>
+
+            <label for="title"><b>Title</b></label>
+            <input type="text" placeholder="Enter title" name="title" id="title" required>
+
+            <label for="author"><b>Author</b></label>
+            <input type="text" placeholder="Enter author" name="author" id="author" required>
+
+            <label for="pages"><b>Number of pages</b></label>
+            <input type="number" placeholder="Enter no. of pages" name="pages" id="pages" required>
+
+            <label for="isRead"><b>Read / not read</b></label>
+            <select name="isRead" id="isRead">
+                <option value="true">Read</option>
+                <option value="false">Not read</option>
+            </select>
+
+            <button type="submit" class="btn">Add</button>
+            <button type="button" class="btn-cancel" onclick="closeForm()">Close</button>
+        </form>
+    </div>
 </body>
 </html>
