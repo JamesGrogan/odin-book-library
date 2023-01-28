@@ -1,4 +1,23 @@
-let myLibrary = [];
+class Library {
+  constructor() {
+    this.library = []
+  }
+
+  addBookToLibrary(book) {
+    this.library.push(book);
+  }
+
+  removeBookFromLibrary(e) {
+    let index = e.target.parentElement.parentElement.dataset.indexNumber; //gets the <tr> element
+    delete this.library[index]; // is there a better solution than delete...?
+  };
+
+  toggleReadStatus(e) {
+    let index = e.target.parentElement.parentElement.dataset.indexNumber;
+    this.library[index].read = !this.library[index].read
+    this.library[index].read ? e.srcElement.innerHTML = 'Read' : e.srcElement.innerHTML = 'Not Read';
+  }
+};
 
 class Book {
   constructor(title, author, pages, read) {
@@ -7,106 +26,117 @@ class Book {
     this.pages = pages;
     this.read = read;
   }
+};
+
+class TableController {
+  bookTable = document.querySelector('#main-book-table');
+  
+  constructor() {}
+
+  addBookToTable(book) {
+    let newRow = this.bookTable.insertRow(-1);
+    let titleCell = newRow.insertCell(0);
+    let titleText = document.createTextNode(book.title);
+    titleCell.appendChild(titleText);
+
+    let authorCell = newRow.insertCell(1);
+    let authorText = document.createTextNode(book.author);
+    authorCell.appendChild(authorText);
+
+    let pagesCell = newRow.insertCell(2);
+    let pagesText = document.createTextNode(book.pages);
+    pagesCell.appendChild(pagesText);
+
+    let readCell = newRow.insertCell(3);
+    let readButton = document.createElement('button');
+    book.read ? readButton.innerHTML = 'Read' : readButton.innerHTML = 'Not read';
+    readCell.appendChild(readButton);
+    readButton.addEventListener('click', (e) => {
+      myLibrary.toggleReadStatus(e);
+    })
+
+    let deleteCell = newRow.insertCell(4);
+    let deleteIcon = document.createElement('img');
+    deleteIcon.src = './imgs/delete.png'
+    deleteIcon.className = `trash-icon ${this.bookTable.rows.length - 1}`;
+    deleteCell.appendChild(deleteIcon);
+
+    // Find the index number of the book in the library
+    let bookIndexNumber = myLibrary.library.findIndex(object => {
+      return object === book;
+    })
+    newRow.dataset.indexNumber = bookIndexNumber; //dataset is a HTML attribute on <tr>
+
+    deleteIcon.addEventListener('click', (e) => {
+      myLibrary.removeBookFromLibrary(e);
+      this.removeBookFromTable(e);
+    })
+  }
+
+  removeBookFromTable(e) {
+    let rowIndex = e.target.parentElement.parentElement.rowIndex;
+    //let bookTable = e.target.parentElement.parentElement.parentElement.parentElement;
+    this.bookTable.deleteRow(rowIndex); 
+  };
 }
 
-hobbit = new Book("The Hobbit", "Tolkein", 305, true);
-harryPotter = new Book(
+class BookFormController {
+  formContainer = document.getElementById('div-newBookForm');
+  form = document.getElementById('newBookForm');
+  openFormButton = document.getElementById('add-new-book')
+  closeFormButton = document.getElementById('close-form-button')
+  
+  constructor() {
+    this.openFormButton.addEventListener("click", (e) => {
+      this.openForm()
+    })
+
+    this.form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      // TODO condense this into a loop
+      let title = document.getElementById('title').value;
+      let author = document.getElementById('author').value;
+      let pages = document.getElementById('pages').value;
+      let isRead;
+      document.getElementById('isRead').value ==='true' ? isRead = true : isRead = false;
+      let newBook = new Book(title, author, pages, isRead);
+      myLibrary.addBookToLibrary(newBook);
+      tableController.addBookToTable(newBook);
+      this.form.reset();
+    });
+
+    this.closeFormButton.addEventListener("click", (e) => {
+      this.form.reset()
+      this.closeForm();
+    })
+  }
+  
+  openForm() {
+    this.formContainer.style.display= 'block';
+  };
+  
+  closeForm() {
+    this.formContainer.style.display = 'none';
+  };
+}
+
+// initial table set up
+const hobbit = new Book("The Hobbit", "Tolkein", 305, true);
+const harryPotter = new Book(
   "Harry Potter and the Order of the Phoenix",
   "Rowling",
   766,
   true);
-godfather = new Book("The Godfather", "Mario Puzo", 608, false);
+const godfather = new Book("The Godfather", "Mario Puzo", 608, false);
 
-addBookToLibrary(hobbit);
-addBookToTable(hobbit);
-addBookToLibrary(harryPotter);
-addBookToTable(harryPotter);
-addBookToLibrary(godfather);
-addBookToTable(godfather);
+const myLibrary = new Library();
+myLibrary.addBookToLibrary(hobbit);
+myLibrary.addBookToLibrary(harryPotter);
+myLibrary.addBookToLibrary(godfather);
 
-function addBookToLibrary(book) {
-  myLibrary.push(book);
-};
+const tableController = new TableController();
+tableController.addBookToTable(hobbit);
+tableController.addBookToTable(harryPotter);
+tableController.addBookToTable(godfather);
 
-function addBookToTable(book) {
-  let bookTable = document.querySelector('#main-book-table');
-  // TODO condense this into a loop
-  let newRow = bookTable.insertRow(-1);
-  let titleCell = newRow.insertCell(0);
-  let titleText = document.createTextNode(book.title);
-  titleCell.appendChild(titleText);
-
-  let authorCell = newRow.insertCell(1);
-  let authorText = document.createTextNode(book.author);
-  authorCell.appendChild(authorText);
-
-  let pagesCell = newRow.insertCell(2);
-  let pagesText = document.createTextNode(book.pages);
-  pagesCell.appendChild(pagesText);
-
-  let readCell = newRow.insertCell(3);
-  let readButton = document.createElement('button');
-  book.read ? readButton.innerHTML = 'Read' : readButton.innerHTML = 'Not read';
-  readCell.appendChild(readButton);
-  readButton.addEventListener('click', (e) => {
-    toggleReadStatus(e);
-  })
-
-  let deleteCell = newRow.insertCell(4);
-  let deleteIcon = document.createElement('img');
-  deleteIcon.src = './imgs/delete.png'
-  deleteIcon.className = `trash-icon ${bookTable.rows.length - 1}`;
-  deleteCell.appendChild(deleteIcon);
-
-  // Find the index number of the book in the library
-  let bookIndexNumber = myLibrary.findIndex(object => {
-    return object === book;
-  })
-  newRow.dataset.indexNumber = bookIndexNumber; //dataset is a HTML attribute on <tr>
-
-  deleteIcon.addEventListener('click', (e) => {
-    removeBookFromLibrary(e);
-    removeBookFromTable(e);
-  })
-};
-
-function removeBookFromLibrary(e) {
-  console.log(e);
-  index = e.target.parentElement.parentElement.dataset.indexNumber; //gets the <tr> element
-  delete myLibrary[index]; // is there a better solution than delete...?
-};
-
-function removeBookFromTable(e) {
-  let rowIndex = e.target.parentElement.parentElement.rowIndex;
-  let bookTable = e.target.parentElement.parentElement.parentElement.parentElement;
-  bookTable.deleteRow(rowIndex); 
-};
-
-function toggleReadStatus(e) {
-  index = e.target.parentElement.parentElement.dataset.indexNumber;
-  myLibrary[index].read = !myLibrary[index].read
-  myLibrary[index].read ? e.srcElement.innerHTML = 'Read' : e.srcElement.innerHTML = 'Not Read';
-}
-
-let form = document.getElementById('newBookForm');
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  // TODO condense this into a loop
-  let title = document.getElementById('title').value;
-  let author = document.getElementById('author').value;
-  let pages = document.getElementById('pages').value;
-  let isRead;
-  document.getElementById('isRead').value ==='true' ? isRead = true : isRead = false;
-  let newBook = new Book(title, author, pages, isRead);
-  addBookToLibrary(newBook);
-  addBookToTable(newBook);
-  form.reset();
-});
-
-function openForm() {
-  document.getElementById('div-newBookForm').style.display= 'block';
-};
-
-function closeForm() {
-  document.getElementById('div-newBookForm').style.display = 'none';
-};
+const bookFormController = new BookFormController()
